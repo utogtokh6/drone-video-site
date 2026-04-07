@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Дроны Видео · Үл Хөдлөх Хөрөнгө</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0f14;
+    --bg2: #131920;
+    --bg3: #1a2330;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.15);
+    --text: #f0ece4;
+    --muted: rgba(240,236,228,0.45);
+    --accent: #c8a96e;
+    --accent2: #e8c990;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 40px;
+    background: rgba(11,15,20,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+  }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a {
+    font-size: 13px; color: var(--muted); text-decoration: none;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    font-size: 12px; padding: 8px 20px;
+    border: 0.5px solid var(--accent);
+    color: var(--accent); text-decoration: none;
+    border-radius: 2px; letter-spacing: 0.06em;
+    transition: background 0.2s, color 0.2s;
+  }
+  .nav-cta:hover { background: var(--accent); color: var(--bg); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 120px 40px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 60%, rgba(200,169,110,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(var(--border) 1px, transparent 1px),
+                      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); border: 0.5px solid rgba(200,169,110,0.3);
+    padding: 6px 16px; border-radius: 20px; margin-bottom: 32px;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-tag::before { content:''; width:5px; height:5px; border-radius:50%; background:var(--accent); }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(40px, 7vw, 80px);
+    font-weight: 400; line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero-sub {
+    font-size: 16px; color: var(--muted); max-width: 480px;
+    margin: 0 auto 48px;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+  .hero-btns {
+    display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+  .btn-primary {
+    padding: 14px 32px; background: var(--accent); color: var(--bg);
+    font-size: 13px; font-weight: 500; letter-spacing: 0.06em;
+    border: none; border-radius: 2px; cursor: pointer;
+    text-decoration: none; display: inline-block;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+  .btn-ghost {
+    padding: 14px 32px; background: transparent; color: var(--text);
+    font-size: 13px; letter-spacing: 0.06em;
+    border: 0.5px solid var(--border2); border-radius: 2px; cursor: pointer;
+    text-decoration: none; display: inline-block;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .btn-ghost:hover { border-color: var(--text); transform: translateY(-1px); }
+  .hero-stats {
+    display: flex; gap: 48px; justify-content: center;
+    margin-top: 80px; padding-top: 48px;
+    border-top: 0.5px solid var(--border);
+    animation: fadeUp 0.8s 0.4s ease both;
+    flex-wrap: wrap;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px; color: var(--accent); display: block;
+  }
+  .stat-label { font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* SECTIONS */
+  section { padding: 100px 40px; max-width: 1100px; margin: 0 auto; }
+  .section-tag {
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 400; line-height: 1.2;
+    margin-bottom: 16px;
+  }
+  .section-sub { font-size: 15px; color: var(--muted); max-width: 540px; }
+
+  /* GALLERY */
+  .gallery-wrap { padding: 100px 0; background: var(--bg2); }
+  .gallery-inner { max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+  .gallery-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 40px; flex-wrap: wrap; gap: 20px; }
+  .filter-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+  .filter-tab {
+    font-size: 12px; padding: 7px 16px;
+    border: 0.5px solid var(--border2); border-radius: 2px;
+    background: transparent; color: var(--muted); cursor: pointer;
+    letter-spacing: 0.06em; transition: all 0.2s;
+  }
+  .filter-tab.active, .filter-tab:hover { border-color: var(--accent); color: var(--accent); }
+
+  .vid-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2px; }
+  .vid-card {
+    background: var(--bg3); cursor: pointer; position: relative;
+    overflow: hidden; aspect-ratio: 16/10;
+    transition: transform 0.3s;
+  }
+  .vid-card:hover { transform: scale(1.01); z-index: 1; }
+  .vid-card:hover .vid-overlay { opacity: 1; }
+  .vid-card:hover .vid-play { transform: scale(1.1); }
+  .vid-thumb-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #1a2330 0%, #0f1923 100%);
+  }
+  .vid-drone-pattern {
+    position: absolute; inset: 0; opacity: 0.15;
+    background-image: radial-gradient(circle at 30% 40%, rgba(200,169,110,0.4) 0%, transparent 50%),
+                      radial-gradient(circle at 70% 70%, rgba(200,169,110,0.2) 0%, transparent 40%);
+  }
+  .vid-overlay {
+    position: absolute; inset: 0;
+    background: rgba(200,169,110,0.08);
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .vid-play {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(200,169,110,0.15);
+    border: 1px solid rgba(200,169,110,0.4);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s, background 0.2s;
+  }
+  .vid-card:hover .vid-play { background: rgba(200,169,110,0.3); }
+  .vid-play svg { margin-left: 3px; }
+  .vid-info {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 12px 14px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+  }
+  .vid-title { font-size: 13px; font-weight: 500; color: var(--text); }
+  .vid-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .vid-badge {
+    position: absolute; top: 12px; right: 12px;
+    font-size: 10px; padding: 3px 8px;
+    background: rgba(200,169,110,0.2); color: var(--accent);
+    border: 0.5px solid rgba(200,169,110,0.3); border-radius: 2px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+
+  /* LIGHTBOX */
+  .lightbox {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.92);
+    align-items: center; justify-content: center;
+    padding: 40px;
+  }
+  .lightbox.open { display: flex; }
+  .lb-inner { max-width: 800px; width: 100%; }
+  .lb-player {
+    width: 100%; aspect-ratio: 16/9;
+    background: var(--bg3); border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden; margin-bottom: 20px;
+  }
+  .lb-pattern {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 40%, rgba(200,169,110,0.15) 0%, transparent 60%);
+  }
+  .lb-play {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: rgba(200,169,110,0.15);
+    border: 1.5px solid rgba(200,169,110,0.5);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .lb-play:hover { background: rgba(200,169,110,0.3); }
+  .lb-meta { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; }
+  .lb-title { font-family: 'DM Serif Display', serif; font-size: 22px; }
+  .lb-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .lb-close {
+    background: transparent; border: 0.5px solid var(--border2);
+    color: var(--muted); padding: 8px 16px; border-radius: 2px;
+    cursor: pointer; font-size: 12px; letter-spacing: 0.06em;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .lb-close:hover { color: var(--text); border-color: var(--text); }
+
+  /* CALCULATOR */
+  .calc-wrap { background: var(--bg2); }
+  .calc-inner { max-width: 1100px; margin: 0 auto; padding: 100px 40px; }
+  .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+  .calc-panel { background: var(--bg3); border: 0.5px solid var(--border); border-radius: 4px; padding: 32px; }
+  .calc-section { margin-bottom: 28px; }
+  .calc-section:last-child { margin-bottom: 0; }
+  .calc-sec-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+  .calc-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .calc-row:last-child { margin-bottom: 0; }
+  .calc-row label { font-size: 13px; color: var(--muted); flex: 1; min-width: 100px; }
+  .calc-row input[type=range] {
+    flex: 2; -webkit-appearance: none; height: 2px;
+    background: var(--border2); border-radius: 1px; outline: none;
+  }
+  .calc-row input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 14px; height: 14px;
+    border-radius: 50%; background: var(--accent); cursor: pointer;
+  }
+  .calc-row .cv { font-size: 13px; font-weight: 500; min-width: 56px; text-align: right; color: var(--text); }
+  .type-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+  .type-btn {
+    font-size: 12px; padding: 6px 14px;
+    border: 0.5px solid var(--border2); border-radius: 2px;
+    background: transparent; color: var(--muted); cursor: pointer;
+    letter-spacing: 0.04em; transition: all 0.2s;
+  }
+  .type-btn.on { border-color: var(--accent); color: var(--accent); background: rgba(200,169,110,0.08); }
+  .extra-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+  .extra-btn {
+    font-size: 11px; padding: 5px 12px;
+    border: 0.5px solid var(--border); border-radius: 2px;
+    background: transparent; color: var(--muted); cursor: pointer;
+    transition: all 0.2s;
+  }
+  .extra-btn.on { border-color: rgba(200,169,110,0.4); color: var(--accent); background: rgba(200,169,110,0.06); }
+  .time-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+  .time-btn {
+    font-size: 11px; padding: 5px 12px;
+    border: 0.5px solid var(--border); border-radius: 2px;
+    background: transparent; color: var(--muted); cursor: pointer;
+    transition: all 0.2s;
+  }
+  .time-btn.on { border-color: rgba(200,169,110,0.4); color: var(--accent); background: rgba(200,169,110,0.06); }
+
+  /* RESULT */
+  .result-side { position: sticky; top: 100px; }
+  .result-panel { background: var(--bg3); border: 0.5px solid var(--border); border-radius: 4px; padding: 32px; }
+  .result-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .result-price {
+    font-family: 'DM Serif Display', serif;
+    font-size: 48px; color: var(--accent); line-height: 1;
+    margin-bottom: 4px;
+  }
+  .result-sub { font-size: 12px; color: var(--muted); margin-bottom: 28px; }
+  .result-divider { border: none; border-top: 0.5px solid var(--border); margin: 20px 0; }
+  .result-breakdown { font-size: 13px; }
+  .rb-row { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 0; border-bottom: 0.5px solid var(--border); color: var(--muted); }
+  .rb-row:last-child { border-bottom: none; }
+  .rb-row span:last-child { color: var(--text); font-weight: 500; }
+  .rb-row.total { color: var(--text); font-weight: 500; margin-top: 4px; }
+  .rb-row.total span:last-child { color: var(--accent); font-size: 16px; }
+  .cta-section { margin-top: 28px; }
+  .cta-main {
+    display: block; width: 100%; padding: 14px;
+    background: var(--accent); color: var(--bg);
+    font-size: 13px; font-weight: 500; letter-spacing: 0.06em;
+    border: none; border-radius: 2px; cursor: pointer; text-align: center;
+    text-decoration: none; margin-bottom: 8px;
+    transition: background 0.2s;
+  }
+  .cta-main:hover { background: var(--accent2); }
+  .cta-note { font-size: 11px; color: var(--muted); text-align: center; }
+
+  /* PROCESS */
+  .process-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2px; margin-top: 60px; }
+  .process-step { background: var(--bg2); padding: 32px 28px; position: relative; }
+  .step-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 48px; color: rgba(200,169,110,0.15);
+    line-height: 1; margin-bottom: 16px;
+  }
+  .step-title { font-size: 15px; font-weight: 500; margin-bottom: 8px; }
+  .step-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* FOOTER */
+  footer {
+    border-top: 0.5px solid var(--border);
+    padding: 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 20px;
+  }
+  .footer-logo { font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--accent); }
+  .footer-note { font-size: 12px; color: var(--muted); }
+  .footer-contact { font-size: 13px; color: var(--accent); text-decoration: none; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; }
+    section { padding: 60px 20px; }
+    .gallery-inner { padding: 0 20px; }
+    .calc-inner { padding: 60px 20px; }
+    .calc-grid { grid-template-columns: 1fr; gap: 32px; }
+    .result-side { position: static; }
+    .hero { padding: 100px 20px 60px; }
+    .hero-stats { gap: 28px; }
+    footer { padding: 28px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">SkyView</div>
+  <div class="nav-links">
+    <a href="#gallery">Ажлууд</a>
+    <a href="#calc">Үнэ</a>
+    <a href="#process">Явц</a>
+  </div>
+  <a href="#calc" class="nav-cta">Захиалах</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-tag">Улаанбаатар · Дроны бичлэг</div>
+  <h1>Таны үл хөдлөхийг<br><em>дэлхийд</em> харуулъя</h1>
+  <p class="hero-sub">Дрон, дотоод бичлэг, хүний тайлбар — гурвыг нэг багцаар. Мэргэжлийн видео, бодит үнэ.</p>
+  <div class="hero-btns">
+    <a href="#gallery" class="btn-primary">Ажлуудыг үзэх</a>
+    <a href="#calc" class="btn-ghost">Үнэ тооцоолох</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><span class="stat-num">120+</span><span class="stat-label">Дуусгасан ажил</span></div>
+    <div class="stat"><span class="stat-num">4К</span><span class="stat-label">Видео чанар</span></div>
+    <div class="stat"><span class="stat-num">24ц</span><span class="stat-label">Хариу хугацаа</span></div>
+    <div class="stat"><span class="stat-num">3+</span><span class="stat-label">Жилийн туршлага</span></div>
+  </div>
+</div>
+
+<!-- GALLERY -->
+<div class="gallery-wrap" id="gallery">
+  <div class="gallery-inner">
+    <div class="gallery-header">
+      <div>
+        <div class="section-tag">Portfolio</div>
+        <h2 class="section-title">Бидний ажлуудаас</h2>
+      </div>
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="filterVids(this,'all')">Бүгд</button>
+        <button class="filter-tab" onclick="filterVids(this,'drone')">Дрон</button>
+        <button class="filter-tab" onclick="filterVids(this,'interior')">Дотоод</button>
+        <button class="filter-tab" onclick="filterVids(this,'presenter')">Тайлбартай</button>
+      </div>
+    </div>
+
+    <div class="vid-grid" id="vid-grid">
+      <div class="vid-card" data-type="drone" onclick="openLightbox('Хан-Уул дүүрэг · 3 өрөө байр','Дрон бичлэг · 2:45 · 2024')">
+        <div class="vid-thumb-bg"></div><div class="vid-drone-pattern"></div><div class="vid-overlay"></div>
+        <div class="vid-play"><svg width="16" height="16" viewBox="0 0 16 16"><polygon points="5,3 13,8 5,13" fill="rgba(200,169,110,0.9)"/></svg></div>
+        <div class="vid-badge">Дрон</div>
+        <div class="vid-info"><div class="vid-title">Хан-Уул · 3 өрөө байр</div><div class="vid-meta">Дрон бичлэг · 2:45</div></div>
+      </div>
+      <div class="vid-card" data-type="interior" onclick="openLightbox('Баянзүрх · Хувийн байшин','Дотоод бичлэг · 3:10 · 2024')">
+        <div class="vid-thumb-bg" style="background:linear-gradient(135deg,#1f2a1a,#131f10)"></div><div class="vid-drone-pattern"></div><div class="vid-overlay"></div>
+        <div class="vid-play"><svg width="16" height="16" viewBox="0 0 16 16"><polygon points="5,3 13,8 5,13" fill="rgba(200,169,110,0.9)"/></svg></div>
+        <div class="vid-badge">Дотоод</div>
+        <div class="vid-info"><div class="vid-title">Баянзүрх · Хувийн байшин</div><div class="vid-meta">Дотоод бичлэг · 3:10</div></div>
+      </div>
+      <div class="vid-card" data-type="presenter" onclick="openLightbox('Сүхбаатар · Арилжааны байр','Хүний тайлбар · 4:00 · 2024')">
+        <div class="vid-thumb-bg" style="background:linear-gradient(135deg,#1a1a2e,#10102a)"></div><div class="vid-drone-pattern"></div><div class="vid-overlay"></div>
+        <div class="vid-play"><svg width="16" height="16" viewBox="0 0 16 16"><polygon points="5,3 13,8 5,13" fill="rgba(200,169,110,0.9)"/></svg></div>
+        <div class="vid-badge">Тайлбар</div>
+        <div class="vid-info"><div class="vid-title">Сүхбаатар · Офис байр</div><div class="vid-meta">Хүний тайлбар · 4:00</div></div>
+      </div>
+      <div class="vid-card" data-type="drone" onclick="openLightbox('Налайх · Газрын зураглал','Дрон бичлэг · 1:50 · 2024')">
+        <div class="vid-thumb-bg" style="background:linear-gradient(135deg,#1a2520,#0f1a14)"></div><div class="vid-drone-pattern"></div><div class="vid-overlay"></div>
+        <div class="vid-play"><svg width="16" height="16" viewBox="0 0 16 16"><polygon points="5,3 13,8 5,13" fill="rgba(200,169,110,0.9)"/></svg></div>
+        <div class="vid-badge">Дрон</div>
+        <div class="vid-info"><div class="vid-title">Налайх · Газрын зураглал</div><div class="vid-meta">Дрон бичлэг · 1:50</div></div>
+      </div>
+      <div class="vid-card" data-type="interior" onclick="openLightbox('Чингэлтэй · Студи байр','Дотоод + дрон · 2:30 · 2024')">
+        <div class="vid-thumb-bg" style="background:linear-gradient(135deg,#251a10,#1a1008)"></div><div class="vid-drone-pattern"></div><div class="vid-overlay"></div>
+        <div class="vid-play"><svg width="16" height="16" viewBox="0 0 16 16"><polygon points="5,3 13,8 5,13" fill="rgba(200,169,110,0.9)"/></svg></div>
+        <div class="vid-badge">Дотоод</div>
+        <div class="vid-info"><div class="vid-title">Чингэлтэй · Студи байр</div><div class="vid-meta">Дотоод + дрон · 2:30</div></div>
+      </div>
+      <div class="vid-card" data-type="presenter" onclick="openLightbox('Хайлааст · Элит орон сууц','Бүх багц · 5:00 · 2024')">
+        <div class="vid-thumb-bg" style="background:linear-gradient(135deg,#1a1520,#110e1a)"></div><div class="vid-drone-pattern"></div><div class="vid-overlay"></div>
+        <div class="vid-play"><svg width="16" height="16" viewBox="0 0 16 16"><polygon points="5,3 13,8 5,13" fill="rgba(200,169,110,0.9)"/></svg></div>
+        <div class="vid-badge">Бүх багц</div>
+        <div class="vid-info"><div class="vid-title">Хайлааст · Элит орон сууц</div><div class="vid-meta">Бүх багц · 5:00</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <div class="lb-inner">
+    <div class="lb-player">
+      <div class="lb-pattern"></div>
+      <div class="lb-play" onclick="toggleLbPlay(this)">
+        <svg id="lb-icon" width="24" height="24" viewBox="0 0 24 24"><polygon points="8,5 20,12 8,19" fill="rgba(200,169,110,0.9)"/></svg>
+      </div>
+    </div>
+    <div class="lb-meta">
+      <div>
+        <div class="lb-title" id="lb-title">—</div>
+        <div class="lb-sub" id="lb-sub">—</div>
+      </div>
+      <button class="lb-close" onclick="document.getElementById('lightbox').classList.remove('open')">Хаах</button>
+    </div>
+  </div>
+</div>
+
+<!-- CALCULATOR -->
+<div class="calc-wrap" id="calc">
+  <div class="calc-inner">
+    <div style="margin-bottom:48px">
+      <div class="section-tag">Үнэ тооцоолуур</div>
+      <h2 class="section-title">Таны захиалгын үнэ</h2>
+      <p class="section-sub">Бичлэгийн төрөл, цаг хугацаа, нэмэлт үйлчилгээнээс хамааран шууд тооцоолно.</p>
+    </div>
+    <div class="calc-grid">
+      <!-- LEFT: INPUTS -->
+      <div class="calc-panel">
+
+        <div class="calc-section">
+          <div class="calc-sec-label">Бичлэгийн төрөл</div>
+          <div class="type-btns">
+            <button class="type-btn on" data-type="drone" onclick="toggleType(this)">Дрон (гадна)</button>
+            <button class="type-btn" data-type="interior" onclick="toggleType(this)">Дотоод</button>
+            <button class="type-btn" data-type="presenter" onclick="toggleType(this)">Хүний тайлбар</button>
+          </div>
+        </div>
+
+        <div class="calc-section">
+          <div class="calc-sec-label">Параметр</div>
+          <div class="calc-row">
+            <label>Видео урт</label>
+            <input type="range" id="s-dur" min="1" max="15" step="1" value="3" oninput="calc()">
+            <span class="cv" id="v-dur">3 мин</span>
+          </div>
+          <div class="calc-row">
+            <label>Байршлын зай</label>
+            <input type="range" id="s-dist" min="0" max="50" step="5" value="10" oninput="calc()">
+            <span class="cv" id="v-dist">10 км</span>
+          </div>
+          <div class="calc-row">
+            <label>Өрөөний тоо</label>
+            <input type="range" id="s-rooms" min="1" max="10" step="1" value="3" oninput="calc()">
+            <span class="cv" id="v-rooms">3 өрөө</span>
+          </div>
+        </div>
+
+        <div class="calc-section">
+          <div class="calc-sec-label">Цаг / яаралтай</div>
+          <div class="time-btns" id="time-btns" style="margin-bottom:10px">
+            <button class="time-btn on" data-tm="1.0" onclick="selTime(this)">Өглөө 7–12</button>
+            <button class="time-btn" data-tm="1.0" onclick="selTime(this)">Өдөр 12–17</button>
+            <button class="time-btn" data-tm="1.25" onclick="selTime(this)">Орой +25%</button>
+            <button class="time-btn" data-tm="1.6" onclick="selTime(this)">Шөнэ +60%</button>
+          </div>
+          <div class="time-btns" id="day-btns" style="margin-bottom:10px">
+            <button class="time-btn on" data-dm="1.0" onclick="selDay(this)">Ажлын өдөр</button>
+            <button class="time-btn" data-dm="1.2" onclick="selDay(this)">Амралт +20%</button>
+            <button class="time-btn" data-dm="1.5" onclick="selDay(this)">Баяр +50%</button>
+          </div>
+          <div class="time-btns" id="urg-btns">
+            <button class="time-btn on" data-um="1.0" onclick="selUrg(this)">7+ хоног</button>
+            <button class="time-btn" data-um="1.1" onclick="selUrg(this)">3–6 хоног +10%</button>
+            <button class="time-btn" data-um="1.3" onclick="selUrg(this)">1–2 хоног +30%</button>
+            <button class="time-btn" data-um="1.6" onclick="selUrg(this)">Өдрийн дотор +60%</button>
+          </div>
+        </div>
+
+        <div class="calc-section">
+          <div class="calc-sec-label">Нэмэлт үйлчилгээ</div>
+          <div class="extra-btns">
+            <button class="extra-btn on" data-val="30000" onclick="this.classList.toggle('on');calc()">Монтаж</button>
+            <button class="extra-btn on" data-val="20000" onclick="this.classList.toggle('on');calc()">Хөгжим</button>
+            <button class="extra-btn on" data-val="15000" onclick="this.classList.toggle('on');calc()">Текст</button>
+            <button class="extra-btn" data-val="25000" onclick="this.classList.toggle('on');calc()">Color grade</button>
+            <button class="extra-btn" data-val="40000" onclick="this.classList.toggle('on');calc()">Зураг авалт</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: RESULT -->
+      <div class="result-side">
+        <div class="result-panel">
+          <div class="result-label">Тооцоолсон үнэ</div>
+          <div class="result-price" id="r-total">255,000₮</div>
+          <div class="result-sub">НӨАТ орсон · Монтаж багтсан</div>
+          <hr class="result-divider">
+          <div class="result-breakdown" id="r-breakdown"></div>
+          <div class="cta-section">
+            <a href="https://m.me/YOUR_PAGE" class="cta-main" target="_blank">Messenger-ээр захиалах</a>
+            <div class="cta-note">Хариуг 1 цагийн дотор өгнө</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="section-tag">Хэрхэн явагдах вэ</div>
+  <h2 class="section-title">Ажлын явц</h2>
+  <div class="process-grid">
+    <div class="process-step">
+      <div class="step-num">01</div>
+      <div class="step-title">Захиалга өгөх</div>
+      <div class="step-desc">Тооцоолуураар үнээ гаргаад Messenger-ээр холбогдоно. Хаана, хэзээ, ямар видео хэрэгтэйг тохиролцоно.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">02</div>
+      <div class="step-title">Бичлэг хийх</div>
+      <div class="step-desc">Тохирсон өдөр газарт очиж дрон болон дотоод бичлэг хийнэ. Нэг ажлын өдөрт дуусгана.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">03</div>
+      <div class="step-title">Засварлалт</div>
+      <div class="step-desc">Монтаж, хөгжим, текст, өнгө засварлалт хийгдэнэ. 2–3 хоногийн дотор бэлэн болно.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">04</div>
+      <div class="step-title">Хүлээлгэж өгөх</div>
+      <div class="step-desc">Өндөр чанарын файлыг Google Drive эсвэл WeTransfer-ээр хүргэнэ. Нэг засвар үнэгүй.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">SkyView</div>
+  <div class="footer-note">© 2024 · Улаанбаатар · Дроны видео үйлчилгээ</div>
+  <a href="https://m.me/YOUR_PAGE" class="footer-contact" target="_blank">Messenger-ээр холбогдох</a>
+</footer>
+
+<script>
+  // Gallery filter
+  function filterVids(btn, type) {
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.vid-card').forEach(c => {
+      c.style.display = (type === 'all' || c.dataset.type === type) ? '' : 'none';
+    });
+  }
+
+  // Lightbox
+  function openLightbox(title, sub) {
+    document.getElementById('lb-title').textContent = title;
+    document.getElementById('lb-sub').textContent = sub;
+    document.getElementById('lightbox').classList.add('open');
+    document.getElementById('lb-icon').innerHTML = '<polygon points="8,5 20,12 8,19" fill="rgba(200,169,110,0.9)"/>';
+  }
+  function closeLightbox(e) {
+    if (e.target === document.getElementById('lightbox')) document.getElementById('lightbox').classList.remove('open');
+  }
+  function toggleLbPlay(btn) {
+    const icon = document.getElementById('lb-icon');
+    const playing = icon.innerHTML.includes('rect');
+    icon.innerHTML = playing
+      ? '<polygon points="8,5 20,12 8,19" fill="rgba(200,169,110,0.9)"/>'
+      : '<rect x="6" y="5" width="4" height="14" fill="rgba(200,169,110,0.9)"/><rect x="14" y="5" width="4" height="14" fill="rgba(200,169,110,0.9)"/>';
+  }
+
+  // Calculator state
+  let types = { drone: true, interior: false, presenter: false };
+  let timeMult = 1.0, dayMult = 1.0, urgMult = 1.0;
+
+  function toggleType(btn) {
+    const key = btn.dataset.type;
+    types[key] = !types[key];
+    btn.classList.toggle('on', types[key]);
+    calc();
+  }
+  function selTime(btn) {
+    document.querySelectorAll('#time-btns .time-btn').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on'); timeMult = parseFloat(btn.dataset.tm); calc();
+  }
+  function selDay(btn) {
+    document.querySelectorAll('#day-btns .time-btn').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on'); dayMult = parseFloat(btn.dataset.dm); calc();
+  }
+  function selUrg(btn) {
+    document.querySelectorAll('#urg-btns .time-btn').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on'); urgMult = parseFloat(btn.dataset.um); calc();
+  }
+
+  function fmt(n) { return (Math.round(n / 1000) * 1000).toLocaleString() + '₮'; }
+
+  function calc() {
+    const dur = parseInt(document.getElementById('s-dur').value);
+    const dist = parseInt(document.getElementById('s-dist').value);
+    const rooms = parseInt(document.getElementById('s-rooms').value);
+    document.getElementById('v-dur').textContent = dur + ' мин';
+    document.getElementById('v-dist').textContent = dist + ' км';
+    document.getElementById('v-rooms').textContent = rooms + ' өрөө';
+
+    const tm = timeMult * dayMult * urgMult;
+    let base = 0;
+    let rows = [];
+
+    if (types.drone) {
+      const s = dur * 80000; const t = dist * 1500;
+      base += s + t;
+      rows.push([`Дрон (${dur}мин)`, fmt(s)]);
+      if (dist > 0) rows.push([`Зам (${dist}км)`, fmt(t)]);
+    }
+    if (types.interior) {
+      const v = rooms * 25000;
+      base += v;
+      rows.push([`Дотоод (${rooms}өрөө)`, fmt(v)]);
+    }
+    if (types.presenter) {
+      base += 60000;
+      rows.push(['Хүний тайлбар', fmt(60000)]);
+    }
+
+    const surcharge = Math.round(base * tm) - base;
+    let extras = 0;
+    document.querySelectorAll('.extra-btn.on').forEach(b => { extras += parseInt(b.dataset.val); });
+
+    if (surcharge > 0) {
+      const pct = Math.round((tm - 1) * 100);
+      rows.push([`Цагийн нэмэгдэл +${pct}%`, fmt(surcharge)]);
+    }
+    document.querySelectorAll('.extra-btn.on').forEach(b => {
+      const v = parseInt(b.dataset.val);
+      if (v > 0) rows.push([b.textContent.trim(), fmt(v)]);
+    });
+
+    const total = Math.round(base * tm) + extras;
+    document.getElementById('r-total').textContent = fmt(total);
+
+    let html = rows.map(([l, v]) => `<div class="rb-row"><span>${l}</span><span>${v}</span></div>`).join('');
+    html += `<div class="rb-row total"><span>Нийт</span><span>${fmt(total)}</span></div>`;
+    document.getElementById('r-breakdown').innerHTML = html;
+  }
+
+  calc();
+</script>
+</body>
+</html>
